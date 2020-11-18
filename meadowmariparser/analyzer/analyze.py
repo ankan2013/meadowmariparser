@@ -2,10 +2,11 @@
 
 import sys
 import os
-import grammar
-import morph_parser
+from . import grammar
+from . import morph_parser
 import time
 
+import pathlib
 
 def collect_filenames(s):
     """
@@ -26,13 +27,18 @@ def collect_filenames(s):
     return filenames
 
 
-def analyze(freqListFile, paradigmFile, lexFile, lexRulesFile,
-            derivFile, conversionFile, cliticFile, delAnaFile,
-            parsedFile, unparsedFile, errorFile,
+def analyze(freqListFile=None, paradigmFile='paradigms.txt', lexFile='lexemes.txt', lexRulesFile='lex_rules.txt',
+            derivFile='derivations.txt', conversionFile='stem_conversions.txt', cliticFile='clitics.txt',
+            delAnaFile='bad_analyses.txt', parsedFile=None, unparsedFile=None, errorFile=None,
             xmlOutput=True, verboseGrammar=False, parserVerbosity=0,
             freqListSeparator='\t', glossing=True,
             parsingMethod='fst', partialCompile=True,
             minFlexLen=4, maxCompileTime=60):
+
+    old_working_dir = os.getcwd()
+    working_dir = pathlib.Path(__file__).parent.absolute()
+    os.chdir(str(working_dir))
+
     t1 = time.time()
     g = grammar.Grammar(verbose=verboseGrammar)
     grammar.Grammar.PARTIAL_COMPILE = partialCompile
@@ -99,16 +105,17 @@ def analyze(freqListFile, paradigmFile, lexFile, lexRulesFile,
     print('Frequency list processed,', parsedRate * 100, '% tokens parsed.')
     print('Average speed:', nTokens / (time.time() - t1), 'tokens per second.')
 
+    os.chdir(str(old_working_dir))
 
 if __name__ == '__main__':
-    paradigmFile = '../paradigms.txt'
-    lexFile = '../lexemes.txt'
-    lexRulesFile = '../lex_rules.txt'
-    derivFile = '../derivations.txt'
-    conversionFile = '../stem_conversions.txt'
-    cliticFile = '../clitics.txt'
-    delAnaFile = '../bad_analyses.txt'
-    freqListFile = '../wordlist.csv'
+    paradigmFile = 'paradigms.txt'
+    lexFile = 'lexemes.txt'
+    lexRulesFile = 'lex_rules.txt'
+    derivFile = 'derivations.txt'
+    conversionFile = 'stem_conversions.txt'
+    cliticFile = 'clitics.txt'
+    delAnaFile = 'bad_analyses.txt'
+    freqListFile = 'wordlist.csv'
     freqListSeparator = '\t'
     parserVerbosity = 0
     parsingMethod = 'fst'

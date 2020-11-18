@@ -1,0 +1,3 @@
+include meadowmariparser/analyzer/bad_analyses.txt
+include meadowmariparser/analyzer/paradigms.txt
+include meadowmariparser/analyzer/lexemes.txt
